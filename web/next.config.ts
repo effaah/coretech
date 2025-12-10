@@ -1,7 +1,17 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  devIndicators: {
+    buildActivity: false,
+    appIsrStatus: false,
+  },
+  experimental: {
+    // No experimental flags needed
+  },
 };
 
-export default nextConfig;
+// Force-disable DevTools
+if (process.env.NEXT_PUBLIC_DISABLE_DEVTOOLS) {
+  process.env.__NEXT_DISABLE_DEV_INDICATOR = "true";
+}
+
+module.exports = nextConfig;

@@ -1,9 +1,10 @@
+// components/layout/Footer.tsx
 import Link from "next/link";
 
 export default function Footer() {
   return (
     <footer className="bg-brand-navy text-brand-slate mt-16">
-      <div className="max-w-6xl mx-auto px-6 py-10 grid gap-8 md:grid-cols-4">
+      <div className="max-w-7xl mx-auto px-6 py-9 grid gap-6 md:grid-cols-4">
         <div>
           <div className="font-semibold text-white mb-2">
             CoreTech Agile Limited
@@ -72,13 +73,33 @@ export default function Footer() {
             <span className="text-brand-electric">
               connect@coretechagile.com
             </span>
+            <br />
+              Mobile:{" "}<span className="text-brand-electric">
+                +233 262610089
+              </span>
           </p>
         </div>
       </div>
 
-      <div className="border-t border-white/10 text-xs text-center py-4 text-brand-slate">
-        © {new Date().getFullYear()} CoreTech Agile Limited. All rights
-        reserved.
+      <div className="border-t border-white/10 text-xs text-center py-3 text-brand-slate">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-2">
+          <span>
+            © {new Date().getFullYear()} CoreTech Agile Limited. All rights
+            reserved.
+          </span>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/privacy-policy"
+              className="hover:text-brand-electric"
+            >
+              Privacy Policy
+            </Link>
+            <span className="text-white/20">|</span>
+            <Link href="/terms" className="hover:text-brand-electric">
+              Terms &amp; Conditions
+            </Link>
+          </div>
+        </div>
       </div>
     </footer>
   );

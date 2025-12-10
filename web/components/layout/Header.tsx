@@ -4,25 +4,24 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navItems = [
+  { label: "About Us", href: "/about" },
   { label: "Services", href: "/services" },
   { label: "Training", href: "/training" },
-  { label: "Consulting", href: "/consulting" },
+  { label: "Events & Media", href: "/events" },
   { label: "Blog", href: "/blog" },
-  { label: "About", href: "/about" },
 ];
 
 export default function Header() {
-  const rawPathname = usePathname();
-  const pathname = rawPathname ?? "/";
+  const pathname = usePathname() ?? "/";
 
   return (
     <header className="bg-brand-navy text-white">
-      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
-        <Link href="/" className="font-semibold text-lg whitespace-nowrap">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <Link href="/" className="font-semibold text-lg tracking-tight">
           CoreTech <span className="text-brand-electric">Agile</span> Limited
         </Link>
 
-        <nav className="hidden md:flex gap-6 text-sm">
+        <nav className="hidden md:flex gap-8 text-sm">
           {navItems.map((item) => {
             const active =
               item.href === "/"
@@ -33,8 +32,10 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`hover:text-brand-electric transition ${
-                  active ? "text-brand-electric" : ""
+                className={`transition ${
+                  active
+                    ? "text-brand-blue"
+                    : "text-white/80 hover:text-white"
                 }`}
               >
                 {item.label}
@@ -45,7 +46,7 @@ export default function Header() {
 
         <Link
           href="/contact"
-          className="hidden md:inline-flex bg-brand-blue hover:bg-brand-electric text-white px-4 py-2 rounded-lg text-sm font-medium transition"
+          className="hidden md:inline-flex bg-brand-blue hover:bg-brand-electric transition text-white px-4 py-2 rounded-lg text-sm font-medium"
         >
           Contact
         </Link>

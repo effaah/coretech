@@ -1,3 +1,5 @@
+// app/services/page.tsx
+
 type StrapiService = {
   id: number;
   documentId: string;
@@ -16,42 +18,41 @@ async function fetchAllServices(): Promise<StrapiService[]> {
   });
 
   if (!res.ok) {
-    console.error(
-      "Failed to fetch services from Strapi:",
-      res.status,
-      res.statusText,
-    );
+    console.error("Failed to fetch services:", res.status, res.statusText);
     return [];
   }
 
   const json = await res.json();
-  const services: StrapiService[] = json.data ?? [];
-  return services;
+  return json.data ?? [];
 }
 
 export default async function ServicesPage() {
   const services = await fetchAllServices();
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <div className="mx-auto max-w-6xl px-4 py-12">
-        <header className="mb-10">
-          <p className="text-xs uppercase tracking-[0.25em] text-sky-500 mb-3">
+    <main className="min-h-screen bg-brand-white">
+      <div className="max-w-7xl mx-auto px-6 py-20">
+
+        {/* Section Header */}
+        <header className="mb-12">
+          <p className="text-xs uppercase tracking-[0.25em] text-brand-blue mb-3">
             Services
           </p>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-brand-dark mb-4">
             What we can do for you
           </h1>
-          <p className="text-gray-700 max-w-2xl">
-            Explore the capabilities and services offered by CoreTech Agile
-            across delivery, engineering, and advisory.
+
+          <p className="text-brand-slate max-w-2xl text-sm leading-relaxed">
+            CoreTech Agile supports teams across delivery, engineering and product — 
+            from advisory and coaching through to hands-on execution.
           </p>
         </header>
 
+        {/* Services Grid */}
         {services.length === 0 ? (
-          <p className="text-gray-500">
-            No services have been published yet. Add some in Strapi to see them
-            listed here.
+          <p className="text-brand-slate">
+            No services are available yet. Please check back later.
           </p>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -59,26 +60,35 @@ export default async function ServicesPage() {
               <a
                 key={service.id}
                 href={`/services/${service.code}`}
-                className="group relative flex flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-sky-400/70 hover:shadow-md"
+                className="group block bg-white border border-brand-border rounded-xl p-6 shadow-card 
+                           hover:shadow-md hover:border-brand-blue transition"
               >
-                <span className="mb-2 inline-flex items-center rounded-full bg-sky-50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-sky-600">
+                {/* Code Tag */}
+                <p className="text-xs uppercase tracking-wide text-brand-blue mb-2">
                   {service.code}
-                </span>
-                <h2 className="mb-2 text-lg font-semibold text-slate-900 group-hover:text-sky-700">
+                </p>
+
+                {/* Title */}
+                <h2 className="text-lg font-semibold text-brand-dark mb-2 group-hover:text-brand-blue transition">
                   {service.title}
                 </h2>
+
+                {/* Description */}
                 {service.shortDescription && (
-                  <p className="mb-4 text-sm text-slate-600 line-clamp-3">
+                  <p className="text-sm text-brand-slate line-clamp-3">
                     {service.shortDescription}
                   </p>
                 )}
-                <span className="mt-auto text-xs font-medium text-sky-600 group-hover:text-sky-700">
+
+                {/* CTA */}
+                <p className="mt-4 text-xs text-brand-blue font-medium group-hover:text-brand-electric transition">
                   View details →
-                </span>
+                </p>
               </a>
             ))}
           </div>
         )}
+
       </div>
     </main>
   );

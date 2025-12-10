@@ -4,9 +4,8 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: "CoreTech Agile",
-  description:
-    "Modern, fast, secure, SEO-friendly website for CoreTech Agile Limited.",
+  title: "CoreTech Agile Limited",
+  description: "Agile Consulting, Training & Delivery Experts",
 };
 
 export default function RootLayout({
@@ -16,12 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-slate-50 text-gray-900 antialiased">
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
+      <body className="bg-brand-white text-brand-slate antialiased">
+        <Header />
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );

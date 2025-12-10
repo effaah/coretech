@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 
 type StrapiService = {
   id: number;
-  documentId: string;
+  documentId?: string;
   code: string;
   title: string;
   shortDescription?: string;
@@ -13,17 +13,16 @@ type StrapiService = {
 };
 
 type FetchState =
-  | { status: "idle" }
   | { status: "loading" }
   | { status: "error"; message: string }
   | { status: "not-found" }
   | { status: "success"; service: StrapiService };
 
-export default function ServicePage() {
+export default function ServiceDetailPage() {
   const params = useParams<{ code: string }>();
   const code = params?.code;
 
-  const [state, setState] = useState<FetchState>({ status: "idle" });
+  const [state, setState] = useState<FetchState>({ status: "loading" });
 
   useEffect(() => {
     if (!code) return;
@@ -31,7 +30,9 @@ export default function ServicePage() {
     const baseUrl =
       process.env.NEXT_PUBLIC_CMS_URL || "http://localhost:1337";
 
-    const url = `${baseUrl}/api/services?filters[code][$eq]=${code}&populate=*`;
+    const url = `${baseUrl}/api/services?filters[code][$eq]=${encodeURIComponent(
+      String(code)
+    )}&populate=*`;
 
     setState({ status: "loading" });
 
@@ -41,7 +42,7 @@ export default function ServicePage() {
           throw new Error(`HTTP ${res.status} ${res.statusText}`);
         }
         const json = await res.json();
-        const service: StrapiService | undefined = json.data?.[0];
+        const service = json.data?.[0] as StrapiService | undefined;
         if (!service) {
           setState({ status: "not-found" });
         } else {
@@ -58,31 +59,31 @@ export default function ServicePage() {
 
   if (!code) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-600">No service code in URL.</p>
+      <main className="bg-brand-soft min-h-screen flex items-center justify-center">
+        <p className="text-brand-slate text-sm">No service code provided.</p>
       </main>
     );
   }
 
-  if (state.status === "idle" || state.status === "loading") {
+  if (state.status === "loading") {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-600">Loading service…</p>
+      <main className="bg-brand-soft min-h-screen flex items-center justify-center">
+        <p className="text-brand-slate text-sm">Loading service…</p>
       </main>
     );
   }
 
   if (state.status === "error") {
     return (
-      <main className="min-h-screen flex items-center justify-center px-4">
+      <main className="bg-brand-soft min-h-screen flex items-center justify-center px-6">
         <div className="max-w-md text-center">
-          <h1 className="text-2xl font-semibold mb-2">
+          <h1 className="text-2xl font-semibold text-brand-dark mb-2">
             Error loading service
           </h1>
-          <p className="text-gray-600 mb-2">
+          <p className="text-brand-slate mb-2">
             There was a problem loading this service.
           </p>
-          <p className="text-xs text-gray-500">{state.message}</p>
+          <p className="text-xs text-brand-slate/70">{state.message}</p>
         </div>
       </main>
     );
@@ -90,12 +91,20 @@ export default function ServicePage() {
 
   if (state.status === "not-found") {
     return (
-      <main className="min-h-screen flex items-center justify-center px-4">
+      <main className="bg-brand-soft min-h-screen flex items-center justify-center px-6">
         <div className="max-w-md text-center">
-          <h1 className="text-2xl font-semibold mb-2">Service not found</h1>
-          <p className="text-gray-600">
+          <h1 className="text-2xl font-semibold text-brand-dark mb-2">
+            Service not found
+          </h1>
+          <p className="text-brand-slate text-sm">
             We couldn&apos;t find a service matching this URL.
           </p>
+          <a
+            href="/services"
+            className="inline-block mt-4 text-sm text-brand-blue hover:text-brand-electric font-medium"
+          >
+            ← Back to all services
+          </a>
         </div>
       </main>
     );
@@ -105,52 +114,57 @@ export default function ServicePage() {
   const { title, shortDescription, content } = service;
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <div className="mx-auto max-w-4xl px-4 py-10">
-        <nav className="mb-6 text-xs text-gray-500">
-          <a href="/" className="hover:text-sky-600">
-            Home
-          </a>{" "}
-          /{" "}
-          <a href="/services" className="hover:text-sky-600">
-            Services
-          </a>{" "}
-          / <span className="text-gray-700">{service.code}</span>
+    <main className="bg-brand-soft min-h-screen">
+      <div className="max-w-4xl mx-auto px-6 py-14">
+
+        {/* Breadcrumb */}
+        <nav className="mb-6 text-xs text-brand-slate">
+          <a href="/" className="hover:text-brand-blue">Home</a> /{" "}
+          <a href="/services" className="hover:text-brand-blue">Services</a> /{" "}
+          <span className="text-brand-dark">{title}</span>
         </nav>
 
-        <article className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
-          <span className="mb-3 inline-flex items-center rounded-full bg-sky-50 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-sky-600">
-            {service.code}
-          </span>
+        {/* Main card */}
+        <article className="bg-brand-white border border-brand-border rounded-2xl shadow-card p-6 md:p-8">
 
-          <h1 className="text-3xl font-bold mb-3 text-slate-900">
+          <h1 className="text-2xl md:text-3xl font-bold text-brand-dark mb-3">
             {title}
           </h1>
 
           {shortDescription && (
-            <p className="mb-6 text-base text-slate-700">
+            <p className="text-sm text-brand-slate mb-6">
               {shortDescription}
             </p>
           )}
 
-          <div className="prose max-w-none prose-p:text-slate-700">
+          {/* Body content */}
+          <div className="space-y-3 text-sm text-brand-slate leading-relaxed">
             {Array.isArray(content) && content.length > 0 ? (
               content.map((block: any, index: number) => {
                 if (block.type === "paragraph") {
                   const text =
-                    block.children
-                      ?.map((child: any) => child.text || "")
-                      .join("") || "";
+                    block.children?.map((child: any) => child.text || "").join("") ||
+                    "";
                   if (!text.trim()) return null;
                   return <p key={index}>{text}</p>;
                 }
                 return null;
               })
             ) : (
-              <p className="text-gray-500">
-                No detailed content has been added for this service yet.
+              <p>
+                Detailed content for this service has not been added yet. Please
+                contact us for more information.
               </p>
             )}
+          </div>
+
+          <div className="mt-8">
+            <a
+              href="/services"
+              className="text-sm text-brand-blue hover:text-brand-electric font-medium"
+            >
+              ← Back to all services
+            </a>
           </div>
         </article>
       </div>
