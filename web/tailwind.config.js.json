@@ -1,0 +1,21 @@
+cat > tailwind.config.js << 'EOF'
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        "brand-navy": "#020617",     // deep navy
+        "brand-blue": "#0ea5e9",     // bright blue CTA
+        "brand-electric": "#38bdf8", // electric accent
+        "brand-slate": "#94a3b8",    // slate text tone
+      },
+    },
+  },
+  plugins: [],
+};
+EOF
